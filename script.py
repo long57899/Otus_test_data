@@ -3,6 +3,12 @@ import csv
 
 keys_list = ["name","gender","address","age","books"]
 
+def reorder_keys(item):
+        ordered_item = OrderedDict()
+        for key in keys_list:
+            if key in item:
+                ordered_item[key] = item[key]
+        return ordered_item
 
 def firts_method(books, peoples, output_file):
     """Это решение в случае если нам нужно передавать книги последовательно."""
@@ -21,10 +27,10 @@ def firts_method(books, peoples, output_file):
         person_index = i % len(peoples_dict)
         peoples_dict[person_index]['books'].append(book)
     
-    new_json = [{key:item[key] for key in item if key in keys_list}for item in peoples_dict]
+    ordered_json = [reorder_keys(person) for person in peoples_dict]
     
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(new_json, f, ensure_ascii=False, indent=2)
+        json.dump(ordered_json, f, ensure_ascii=False, indent=2)
 
 
 def second_method(books, peoples, output_file):
@@ -50,11 +56,10 @@ def second_method(books, peoples, output_file):
 
         person['books'] = books_list[start_idx:end_idx]
 
- 
-    new_json = [{key:item[key] for key in item if key in keys_list}for item in peoples_dict]
+    ordered_json = [reorder_keys(person) for person in peoples_dict]
     
     with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(new_json, f, ensure_ascii=False, indent=2)
+        json.dump(ordered_json, f, ensure_ascii=False, indent=2)
 
 
 firts_method('books.csv', 'users.json', 'result_1.json')
